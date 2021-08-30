@@ -1,18 +1,16 @@
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 
-const imageWidth = 720;
-const imageHeight = 720;
-const maxTextWidth = imageWidth - 100;
 registerFont(path.join(__dirname, '../fonts/CormorantGaramond-Bold.ttf'), {family: 'Glory'});
-const fontSize = 50;
+const fontSize = 80;
 const lineHeight = fontSize + 10;
+const horizontalMargin = 60;
 
-const getRandomTweet = (tweets) => {
-  return tweets[Math.floor(Math.random() * tweets.length)];
+const getRandomValue = (array) => {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
-const getFitLines = (text, ctx) => {
+const getFitLines = (text, ctx, maxTextWidth) => {
   const lines = text.split('\n');
   const fitLines = [];
   for (let i = 0; i < lines.length; i++) {
@@ -36,22 +34,25 @@ const getFitLines = (text, ctx) => {
   return fitLines;
 }
 
-module.exports = async (tweets, Twit, res) => {
+module.exports = async (data, name, Twit, res) => {
   try {
     const initTime = Date.now(); console.log('init:', 0);
-    const tweet = getRandomTweet(tweets);console.log('getRandomText:', Date.now() - initTime);
-    // const img = getRandomImage();
-    const imageName = 'taylor2.jpg';
+    const key = getRandomValue(Object.keys(data));console.log('getRandomKey:', Date.now() - initTime);
+    const tweet = getRandomValue(data[key].tweets);console.log('getRandomTweet:', Date.now() - initTime);
     
-    const canvas = createCanvas(imageWidth, imageHeight);
+    const imageName = getRandomValue(data[key].images);
+    const image = await loadImage(path.join(__dirname, '../img', name, key, `${imageName}.jpg`));
+    const maxTextWidth = image.width - horizontalMargin;
+    
+    const canvas = createCanvas(image.width, image.height);
     const ctx = canvas.getContext('2d');
 
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const image = await loadImage(path.join(__dirname, imageName));
 
-    ctx.drawImage(image, 0, 0, imageWidth, imageHeight * image.height / image.width);
+    // ctx.drawImage(image, 0, 0, imageWidth, imageHeight * image.height / image.width);
+    ctx.drawImage(image, 0, 0, image.width, image.height);
 
     ctx.font = `${fontSize}px 'Glory'`;
     ctx.fillStyle = '#ffffff';
@@ -59,11 +60,11 @@ module.exports = async (tweets, Twit, res) => {
     ctx.textBaseline = 'middle';
 
     ctx.shadowColor = 'black';
-    ctx.shadowBlur = 4;
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetX = 4;
+    ctx.shadowOffsetY = 4;
 
-    const lines = getFitLines(tweet, ctx);console.log('getFitLines:', Date.now() - initTime);
+    const lines = getFitLines(tweet, ctx, maxTextWidth);console.log('getFitLines:', Date.now() - initTime);
     console.log('fit lines:', lines);
     let positionY = canvas.height / 2 - (lines.length - 1) * lineHeight / 2;
 
@@ -90,7 +91,7 @@ module.exports = async (tweets, Twit, res) => {
     
     // res.status(200).send(`Post ok: ${tweetResult.data.text}`);
 
-    res.status(200).send(`<img src="${url}" />`);
+    res.status(200).send(`<html><head></head><body style="margin: 0"><img src="${url}" /></body></html>`);
   } catch(error) {
     res.status(500).send(`Error: ${error.message} (${error.code})`);
   }
