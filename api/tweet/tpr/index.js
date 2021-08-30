@@ -11,5 +11,5 @@ const T = new Twit({
 });
 
 module.exports = (req, res) => {
-  tweet(tpr, T, res);
+  tweet(tpr, 'tpr', T, res);
 };
