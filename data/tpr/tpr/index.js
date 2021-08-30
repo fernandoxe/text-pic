@@ -30,4 +30,11 @@ const tweets = [
   'Then I turn around and think I see someone that looks like you',
 ];
 
-module.exports = tweets;
+const images = [
+  'taylor1',
+];
+
+module.exports = {
+  tweets,
+  images,
+}; 
