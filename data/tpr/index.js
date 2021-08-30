@@ -1,9 +1,9 @@
-const tprep = require('./tpr');
+const tpr = require('./tpr');
 const lmu = require('./lmu');
 
-const tweets = [
-  ...tprep,
-  ...lmu,
-];
+const data = {
+  tpr,
+  lmu,
+};
 
-module.exports = tweets;
+module.exports = data;
