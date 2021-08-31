@@ -48,4 +48,4 @@ const images = [
 module.exports = {
   tweets,
   images,
-}; 
+};

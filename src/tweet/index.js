@@ -96,14 +96,3 @@ module.exports = async (data, name, Twit, res) => {
     res.status(500).send(`Error: ${error.message} (${error.code})`);
   }
 };
-
-// module.exports = (tweets, Twit, res) => {
-//   const tweet = getRandomTweet(tweets);
-//   Twit.post('statuses/update', { status: tweet })
-//   .then((result) => {
-//     res.status(200).send(`Post ok: ${result.data.text}`);
-//   })
-//   .catch(err => {
-//     res.status(500).send(`Error: ${err.message} (${err.code})`);
-//   });
-// };
