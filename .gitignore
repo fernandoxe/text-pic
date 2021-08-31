@@ -2,3 +2,6 @@
 .config
 
 .vercel
+
+src/fonts
+src/img
