@@ -34,14 +34,13 @@ const getFitLines = (text, ctx, maxTextWidth) => {
   return fitLines;
 }
 
-module.exports = async (data, name, Twit, res) => {
+module.exports = async (data, Twit, res) => {
   try {
     const initTime = Date.now(); console.log('init:', 0);
-    const key = getRandomValue(Object.keys(data));console.log('getRandomKey:', Date.now() - initTime);
-    const tweet = getRandomValue(data[key].tweets);console.log('getRandomTweet:', Date.now() - initTime);
+    const tweet = getRandomValue(data.tweets);console.log('getRandomTweet:', Date.now() - initTime);
     
-    const imageName = getRandomValue(data[key].images);
-    const image = await loadImage(path.join(__dirname, '../img', name, key, `${imageName}.jpg`));
+    const imageName = getRandomValue(data.images);
+    const image = await loadImage(path.join(__dirname, '../img', data.name, `${imageName}.jpg`));
     const maxTextWidth = image.width - horizontalMargin;
     
     const canvas = createCanvas(image.width, image.height);
