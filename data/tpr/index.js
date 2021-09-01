@@ -1,9 +1,12 @@
-const tpr = require('./tpr');
+const images = require('./images');
 const lmu = require('./lmu');
 
-const data = {
-  tpr,
-  lmu,
-};
+const tweets = [
+  ...lmu,
+];
 
-module.exports = data;
+module.exports = {
+  name: 'tpr',
+  tweets,
+  images,
+};
