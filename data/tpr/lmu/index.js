@@ -41,11 +41,4 @@ const tweets = [
   'We\'ll burn up in the light\nEvery time I look inside your eyes',
 ];
 
-const images = [
-  'taylor1',
-];
-
-module.exports = {
-  tweets,
-  images,
-};
+module.exports = tweets;
