@@ -1,7 +1,7 @@
 const tpr = require('../../../data/tpr');
 const config = require('../../../.config');
 const Twit = require('twit');
-const tweet = require('../../../src/tweet');
+const { tweet } = require('../../../src/tweet');
 
 const T = new Twit({
   consumer_key: config.tpr.consumer_key,
