@@ -34,48 +34,54 @@ const getFitLines = (text, ctx, maxTextWidth) => {
   return fitLines;
 }
 
-module.exports = async (data, Twit, res) => {
+const getImageDataUrl = async data => {
+  const initTime = Date.now(); console.log('init:', 0);
+  const tweet = getRandomValue(data.tweets); console.log('getRandomTweet:', Date.now() - initTime);
+
+  const imageName = getRandomValue(data.images);
+  const image = await loadImage(path.join(__dirname, '../img', data.name, `${imageName}.jpg`));
+  const maxTextWidth = image.width - horizontalMargin;
+
+  const canvas = createCanvas(image.width, image.height);
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+  // ctx.drawImage(image, 0, 0, imageWidth, imageHeight * image.height / image.width);
+  ctx.drawImage(image, 0, 0, image.width, image.height);
+
+  ctx.font = `${fontSize}px 'Glory'`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.shadowColor = 'black';
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetX = 4;
+  ctx.shadowOffsetY = 4;
+
+  const lines = getFitLines(tweet, ctx, maxTextWidth); console.log('getFitLines:', Date.now() - initTime);
+  console.log('fit lines:', lines);
+  let positionY = canvas.height / 2 - (lines.length - 1) * lineHeight / 2;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    ctx.fillText(line, canvas.width / 2, positionY);
+    positionY += lineHeight;
+  } console.log('fill texts:', Date.now() - initTime);
+
+  positionY = 200;
+
+  const url = canvas.toDataURL('image/jpeg'); console.log('toDataUrl:', Date.now() - initTime);
+
+  return url;
+};
+
+const tweet = async (data, Twit, res) => {
   try {
-    const initTime = Date.now(); console.log('init:', 0);
-    const tweet = getRandomValue(data.tweets);console.log('getRandomTweet:', Date.now() - initTime);
-    
-    const imageName = getRandomValue(data.images);
-    const image = await loadImage(path.join(__dirname, '../img', data.name, `${imageName}.jpg`));
-    const maxTextWidth = image.width - horizontalMargin;
-    
-    const canvas = createCanvas(image.width, image.height);
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-
-    // ctx.drawImage(image, 0, 0, imageWidth, imageHeight * image.height / image.width);
-    ctx.drawImage(image, 0, 0, image.width, image.height);
-
-    ctx.font = `${fontSize}px 'Glory'`;
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 6;
-    ctx.shadowOffsetX = 4;
-    ctx.shadowOffsetY = 4;
-
-    const lines = getFitLines(tweet, ctx, maxTextWidth);console.log('getFitLines:', Date.now() - initTime);
-    console.log('fit lines:', lines);
-    let positionY = canvas.height / 2 - (lines.length - 1) * lineHeight / 2;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      ctx.fillText(line, canvas.width / 2, positionY);
-      positionY += lineHeight;
-    }console.log('fill texts:', Date.now() - initTime);
-
-    positionY = 200;
-
-    const url = canvas.toDataURL('image/jpeg');console.log('toDataUrl:', Date.now() - initTime);
+    const url = await getImageDataUrl(data);
 
     // const b64image = url.replace('data:image/jpeg;base64,', '');console.log('replace b64:', Date.now() - initTime);
 
@@ -95,3 +101,10 @@ module.exports = async (data, Twit, res) => {
     res.status(500).send(`Error: ${error.message} (${error.code})`);
   }
 };
+
+module.exports = {
+  tweet,
+  getImageDataUrl,
+  getFitLines,
+  getRandomValue,
+}
