@@ -6,6 +6,8 @@ const fontSize = 80;
 const lineHeight = fontSize + 10;
 const horizontalMargin = 60;
 
+const initTime = Date.now(); console.log('init:', 0);
+
 const getRandomValue = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 }
@@ -35,7 +37,6 @@ const getFitLines = (text, ctx, maxTextWidth) => {
 }
 
 const getImageDataUrl = async data => {
-  const initTime = Date.now(); console.log('init:', 0);
   const tweet = getRandomValue(data.tweets); console.log('getRandomTweet:', Date.now() - initTime);
 
   const imageName = getRandomValue(data.images);
@@ -79,31 +80,35 @@ const getImageDataUrl = async data => {
   return url;
 };
 
-const tweet = async (data, Twit, res) => {
-  try {
-    const url = await getImageDataUrl(data);
+const getB64Image = url => {
+  const b64image = url.replace('data:image/jpeg;base64,', '');console.log('replace b64:', Date.now() - initTime);
+  return b64image;
+};
 
-    // const b64image = url.replace('data:image/jpeg;base64,', '');console.log('replace b64:', Date.now() - initTime);
+const postTweet = async (data, Twit) => {
+  const url = await getImageDataUrl(data);
 
-    // const imageResult = await Twit.post('media/upload', { media_data: b64image });console.log('media/upload:', Date.now() - initTime);
-    // const mediaId = imageResult.data.media_id_string;
-    // const meta = {
-    //   media_id: mediaId,
-    //   alt_text: { text: tweet },
-    // };
-    // await Twit.post('media/metadata/create', meta);console.log('media/metadata/create:', Date.now() - initTime);
-    // const tweetResult = await Twit.post('statuses/update', { media_ids: [mediaId] });console.log('statuses/update:', Date.now() - initTime);
-    
-    // res.status(200).send(`Post ok: ${tweetResult.data.text}`);
+  // const b64image = getB64Image(url);
+  // const imageResult = await Twit.post('media/upload', { media_data: b64image });console.log('media/upload:', Date.now() - initTime);
+  // const mediaId = imageResult.data.media_id_string;
+  // const meta = {
+  //   media_id: mediaId,
+  //   alt_text: { text: tweet },
+  // };
+  // await Twit.post('media/metadata/create', meta);console.log('media/metadata/create:', Date.now() - initTime);
+  // const tweetResult = await Twit.post('statuses/update', { media_ids: [mediaId] });console.log('statuses/update:', Date.now() - initTime);
+  
+  // res.status(200).send(`Post ok: ${tweetResult.data.text}`);
+  // const response = `Post ok: ${tweetResult.data.text}`;
 
-    res.status(200).send(`<html><head></head><body style="margin: 0"><img src="${url}" /></body></html>`);
-  } catch(error) {
-    res.status(500).send(`Error: ${error.message} (${error.code})`);
-  }
+  // res.status(200).send(`<html><head></head><body style="margin: 0"><img src="${url}" /></body></html>`);
+  const response = `<html><head></head><body style="margin: 0"><img src="${url}" /></body></html>`;
+  
+  return response;
 };
 
 module.exports = {
-  tweet,
+  postTweet,
   getImageDataUrl,
   getFitLines,
   getRandomValue,
