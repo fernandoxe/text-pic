@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const path = require('path');
 const { createCanvas, registerFont } = require('canvas');
-const { getFitLines, postTweet } = require('../src/tweet');
+const { getFitLines, getImageDataUrl, postTweet } = require('../src/tweet');
 
 describe('Tweet test', () => {
   const width = 1080;
@@ -50,5 +50,25 @@ describe('Tweet test', () => {
     const response = await postTweet(data, null);
 
     expect(response).to.be.a('string');
+  });
+
+  it('Should return the url of generated image', async () => {
+    const data = {
+      name: 'tpr',
+      tweets: [
+        'Somebody mixed my medicine',
+        'Well, you hurt where you sleep and you sleep where you lie',
+        'And now you\'re in deep and now you\'re gonna cry',
+        'You start to sweat so hold me tight',
+      ],
+      images: [
+        'taylor1',
+        'taylor2',
+      ]
+    };
+
+    const url = await getImageDataUrl(data);
+
+    expect(url).to.satisfy(image => image.startsWith('data:image/jpeg;base64,'));
   });
 });
