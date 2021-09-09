@@ -19,17 +19,38 @@ describe('Tweet test', () => {
   });
 
   it('Should return lines that fit in canvas', () => {
-    const tweet = 'Show me all the things that I shouldn\'t know\nAnd there\'s a blue moon on the rise';
-    const linesMock = [
+    const oneShortLineText = 'Thanks for asking';
+    const oneLargeLineText = 'I\'ve been looking for my own protection to save';
+    const twoShortLinesText = 'But everything looks better\nWhen the sun goes down';
+    const twoLargeLinesText = 'Show me all the things that I shouldn\'t know\nAnd there\'s a blue moon on the rise';
+    
+    const oneShortLineMock = [
+      'Thanks for asking',
+    ];
+    const oneLargeLineMock = [
+      'I\'ve been looking for my own',
+      'protection to save',
+    ];
+    const twoShortLinesMock = [
+      'But everything looks better',
+      'When the sun goes down',
+    ];
+    const twoLargeLinesMock = [
       'Show me all the things that I',
       'shouldn\'t know',
       'And there\'s a blue moon on the',
       'rise',
     ];
 
-    const lines = getFitLines(tweet, ctx, maxTextWidth);
+    const oneShortLineFit = getFitLines(oneShortLineText, ctx, maxTextWidth);
+    const oneLargeLineFit = getFitLines(oneLargeLineText, ctx, maxTextWidth);
+    const twoShortLinesFit = getFitLines(twoShortLinesText, ctx, maxTextWidth);
+    const twoLargeLinesFit = getFitLines(twoLargeLinesText, ctx, maxTextWidth);
 
-    expect(lines).to.be.eql(linesMock);
+    expect(oneShortLineFit).to.be.eql(oneShortLineMock);
+    expect(oneLargeLineFit).to.be.eql(oneLargeLineMock);
+    expect(twoShortLinesFit).to.be.eql(twoShortLinesMock);
+    expect(twoLargeLinesFit).to.be.eql(twoLargeLinesMock);
   });
 
   it('Should post the tweet', async () => {
