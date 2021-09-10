@@ -112,4 +112,5 @@ module.exports = {
   getImageDataUrl,
   getFitLines,
   getRandomValue,
+  getB64Image,
 }
