@@ -1,10 +1,20 @@
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 
-registerFont(path.join(__dirname, '../fonts/CormorantGaramond-Bold.ttf'), {family: 'Glory'});
+const fontName = 'Glory';
+registerFont(path.join(__dirname, '../fonts/CormorantGaramond-Bold.ttf'), {family: fontName});
+const backgroundColor = '#000000';
+const fontColor = '#ffffff';
+const textAlign = 'center';
+const textBaseline = 'middle';
+const shadowColor = 'black';
+const shadowBlur = 6;
+const shadowOffsetX = 4;
+const shadowOffsetY = 4;
 const fontSize = 80;
 const lineHeight = fontSize + 10;
 const horizontalMargin = 60;
+const imageMimeType = 'image/jpeg';
 
 const initTime = Date.now(); console.log('init:', 0);
 
@@ -46,22 +56,22 @@ const getImageDataUrl = async data => {
   const canvas = createCanvas(image.width, image.height);
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#000000';
+  ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 
   // ctx.drawImage(image, 0, 0, imageWidth, imageHeight * image.height / image.width);
   ctx.drawImage(image, 0, 0, image.width, image.height);
 
-  ctx.font = `${fontSize}px 'Glory'`;
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  ctx.font = `${fontSize}px '${fontName}'`;
+  ctx.fillStyle = fontColor;
+  ctx.textAlign = textAlign;
+  ctx.textBaseline = textBaseline;
 
-  ctx.shadowColor = 'black';
-  ctx.shadowBlur = 6;
-  ctx.shadowOffsetX = 4;
-  ctx.shadowOffsetY = 4;
+  ctx.shadowColor = shadowColor;
+  ctx.shadowBlur = shadowBlur;
+  ctx.shadowOffsetX = shadowOffsetX;
+  ctx.shadowOffsetY = shadowOffsetY;
 
   const lines = getFitLines(tweet, ctx, maxTextWidth); console.log('getFitLines:', Date.now() - initTime);
   console.log('fit lines:', lines);
@@ -73,15 +83,13 @@ const getImageDataUrl = async data => {
     positionY += lineHeight;
   } console.log('fill texts:', Date.now() - initTime);
 
-  positionY = 200;
-
-  const url = canvas.toDataURL('image/jpeg'); console.log('toDataUrl:', Date.now() - initTime);
+  const url = canvas.toDataURL(imageMimeType); console.log('toDataUrl:', Date.now() - initTime);
 
   return url;
 };
 
 const getB64Image = url => {
-  const b64image = url.replace('data:image/jpeg;base64,', '');console.log('replace b64:', Date.now() - initTime);
+  const b64image = url.replace(`data:${imageMimeType};base64,`, '');console.log('replace b64:', Date.now() - initTime);
   return b64image;
 };
 
