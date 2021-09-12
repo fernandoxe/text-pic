@@ -1,20 +1,20 @@
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 
-const fontName = 'Glory';
-registerFont(path.join(__dirname, '../fonts/CormorantGaramond-Bold.ttf'), {family: fontName});
-const backgroundColor = '#000000';
-const fontColor = '#ffffff';
-const textAlign = 'center';
-const textBaseline = 'middle';
-const shadowColor = 'black';
-const shadowBlur = 6;
-const shadowOffsetX = 4;
-const shadowOffsetY = 4;
-const fontSize = 80;
-const lineHeight = fontSize + 10;
-const horizontalMargin = 60;
-const imageMimeType = 'image/jpeg';
+const FONT_NAME = 'Glory';
+registerFont(path.join(__dirname, '../fonts/CormorantGaramond-Bold.ttf'), {family: FONT_NAME});
+const BACKGROUND_COLOR = '#000000';
+const FONT_COLOR = '#ffffff';
+const TEXT_ALIGN = 'center';
+const TEXT_BASELINE = 'middle';
+const SHADOW_COLOR = 'black';
+const SHADOW_BLUR = 6;
+const SHADOW_OFFSETX = 4;
+const SHADOW_OFFSETY = 4;
+const FONT_SIZE = 80;
+const LINE_HEIGHT = FONT_SIZE + 10;
+const HORIZONTAL_MARGIN = 60;
+const IMAGE_MIME_TYPE = 'image/jpeg';
 
 const initTime = Date.now(); console.log('init:', 0);
 
@@ -51,45 +51,45 @@ const getImageDataUrl = async data => {
 
   const imageName = getRandomValue(data.images);
   const image = await loadImage(path.join(__dirname, '../img', data.name, `${imageName}.jpg`));
-  const maxTextWidth = image.width - horizontalMargin;
+  const maxTextWidth = image.width - HORIZONTAL_MARGIN;
 
   const canvas = createCanvas(image.width, image.height);
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = backgroundColor;
+  ctx.fillStyle = BACKGROUND_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 
   // ctx.drawImage(image, 0, 0, imageWidth, imageHeight * image.height / image.width);
   ctx.drawImage(image, 0, 0, image.width, image.height);
 
-  ctx.font = `${fontSize}px '${fontName}'`;
-  ctx.fillStyle = fontColor;
-  ctx.textAlign = textAlign;
-  ctx.textBaseline = textBaseline;
+  ctx.font = `${FONT_SIZE}px '${FONT_NAME}'`;
+  ctx.fillStyle = FONT_COLOR;
+  ctx.textAlign = TEXT_ALIGN;
+  ctx.textBaseline = TEXT_BASELINE;
 
-  ctx.shadowColor = shadowColor;
-  ctx.shadowBlur = shadowBlur;
-  ctx.shadowOffsetX = shadowOffsetX;
-  ctx.shadowOffsetY = shadowOffsetY;
+  ctx.shadowColor = SHADOW_COLOR;
+  ctx.shadowBlur = SHADOW_BLUR;
+  ctx.shadowOffsetX = SHADOW_OFFSETX;
+  ctx.shadowOffsetY = SHADOW_OFFSETY;
 
   const lines = getFitLines(tweet, ctx, maxTextWidth); console.log('getFitLines:', Date.now() - initTime);
   console.log('fit lines:', lines);
-  let positionY = canvas.height / 2 - (lines.length - 1) * lineHeight / 2;
+  let positionY = canvas.height / 2 - (lines.length - 1) * LINE_HEIGHT / 2;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     ctx.fillText(line, canvas.width / 2, positionY);
-    positionY += lineHeight;
+    positionY += LINE_HEIGHT;
   } console.log('fill texts:', Date.now() - initTime);
 
-  const url = canvas.toDataURL(imageMimeType); console.log('toDataUrl:', Date.now() - initTime);
+  const url = canvas.toDataURL(IMAGE_MIME_TYPE); console.log('toDataUrl:', Date.now() - initTime);
 
   return url;
 };
 
 const getB64Image = url => {
-  const b64image = url.replace(`data:${imageMimeType};base64,`, '');console.log('replace b64:', Date.now() - initTime);
+  const b64image = url.replace(`data:${IMAGE_MIME_TYPE};base64,`, '');console.log('replace b64:', Date.now() - initTime);
   return b64image;
 };
 
